@@ -1,0 +1,3 @@
+ALTER TABLE IF EXISTS unit_data
+    ADD COLUMN unit_type VARCHAR (10),
+    ADD COLUMN is_alive BOOLEAN;

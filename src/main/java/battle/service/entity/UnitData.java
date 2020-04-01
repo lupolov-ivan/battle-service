@@ -2,6 +2,7 @@ package battle.service.entity;
 
 import lombok.Data;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,8 +15,9 @@ public class UnitData {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Integer id;
-    private Integer posX;
-    private Integer posY;
-    private Integer protectionLevel;
+
+    @Embedded
+    private Unit unit;
     private Double takenDamage;
+    private Boolean isAlive;
 }
