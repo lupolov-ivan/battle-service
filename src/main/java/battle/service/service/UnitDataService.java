@@ -27,7 +27,7 @@ public class UnitDataService {
         int width = battlefield.getWidth();
         int length = battlefield.getLength();
 
-        if((posX < 0 && posX > width -1) || (posY < 0 && posY > length -1)) {
+        if(posX < 0 || posX > width -1 || posY < 0 || posY > length -1) {
             throw new UnitOutsideBattlefieldException();
         }
 
@@ -40,14 +40,15 @@ public class UnitDataService {
         return unitDataRepository.save(unitData);
     }
 
-    public UnitData getUnitByCoordinate(Integer posX, Integer posY) {
-        return unitDataRepository.findByUnit_PosXAndUnit_PosY(posX, posY).orElseThrow(NotFoundException::new);
+    public Unit getUnitByCoordinate(Integer posX, Integer posY) {
+        UnitData maybeUnitData = unitDataRepository.findByUnit_PosXAndUnit_PosY(posX, posY).orElseThrow(NotFoundException::new);
+        return maybeUnitData.getUnit();
     }
 
-    public void setDamageUnit(Integer posX, Integer posY, UnitDamageDto unitDamageDto) {
+    public void setDamageUnit(UnitDamageDto unitDamageDto) {
 
         UnitData maybeUnitData = unitDataRepository
-                .findByUnit_PosXAndUnit_PosY(posX, posY)
+                .findByUnit_PosXAndUnit_PosY(unitDamageDto.getPosX(), unitDamageDto.getPosY())
                 .orElseThrow(NotFoundException::new);
 
         Unit unit = maybeUnitData.getUnit();
@@ -66,9 +67,9 @@ public class UnitDataService {
         unitDataRepository.save(maybeUnitData);
     }
 
-    public void updateUnitPosition(Integer posX, Integer posY, PositionUpdateDto positionUpdateDto) {
+    public void updateUnitPosition(PositionUpdateDto positionUpdateDto) {
         UnitData maybeUnitData = unitDataRepository
-                .findByUnit_PosXAndUnit_PosY(posX, posY)
+                .findByUnit_PosXAndUnit_PosY(positionUpdateDto.getPosX(), positionUpdateDto.getPosY())
                 .orElseThrow(NotFoundException::new);
 
         Unit unit = maybeUnitData.getUnit();

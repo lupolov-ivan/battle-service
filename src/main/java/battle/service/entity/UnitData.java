@@ -1,6 +1,8 @@
 package battle.service.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -11,6 +13,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class UnitData {
     @Id
     @GeneratedValue(strategy = IDENTITY)

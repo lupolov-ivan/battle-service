@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:postgresql://hostname:5432/postgres
+battlefield:
+  width: 20
+  length: 20

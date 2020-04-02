@@ -26,7 +26,6 @@ public class UnitDataController {
     @Value("${uri-builder.port}")
     private Integer port;
 
-
     private final UnitDataService unitDataService;
 
     @PostMapping
@@ -38,20 +37,20 @@ public class UnitDataController {
     }
 
     @GetMapping("/x/{posX}/y/{posY}")
-    public ResponseEntity<UnitData> getUnitByCoordinate(@PathVariable Integer posX, @PathVariable Integer posY) {
-        UnitData data = unitDataService.getUnitByCoordinate(posX, posY);
-        return ResponseEntity.ok(data);
+    public ResponseEntity<Unit> getUnitByCoordinate(@PathVariable Integer posX, @PathVariable Integer posY) {
+        Unit unit = unitDataService.getUnitByCoordinate(posX, posY);
+        return ResponseEntity.ok(unit);
     }
 
-    @PatchMapping("/x/{posX}/y/{posY}/damage")
-    public ResponseEntity<?> setDamageUnit(@PathVariable Integer posX, @PathVariable Integer posY, @RequestBody UnitDamageDto unitDamageDto) {
-        unitDataService.setDamageUnit(posX, posY, unitDamageDto);
+    @PatchMapping("/damage")
+    public ResponseEntity<?> setDamageUnit(@RequestBody UnitDamageDto unitDamageDto) {
+        unitDataService.setDamageUnit(unitDamageDto);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/x/{posX}/y/{posY}/position/update")
-    public ResponseEntity<?> updateUnitPosition(@PathVariable Integer posX, @PathVariable Integer posY, @RequestBody PositionUpdateDto positionUpdateDto) {
-        unitDataService.updateUnitPosition(posX, posY, positionUpdateDto);
+    @PatchMapping("/position/update")
+    public ResponseEntity<?> updateUnitPosition(@RequestBody PositionUpdateDto positionUpdateDto) {
+        unitDataService.updateUnitPosition(positionUpdateDto);
         return ResponseEntity.noContent().build();
     }
 
@@ -60,7 +59,7 @@ public class UnitDataController {
     public void handleNotFound() { }
 
     @ExceptionHandler(UnitOutsideBattlefieldException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Unit is outside the battlefield.")
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Unit is outside the battlefield.")
     public void handleUnitOutsideBattlefieldException() { }
 
     private UriComponentsBuilder createUriBuilder() {
