@@ -1,6 +1,5 @@
 package battle.service.controller;
 
-import battle.service.entity.Unit;
 import battle.service.entity.UnitData;
 import battle.service.entity.UnitType;
 import battle.service.repository.UnitDataRepository;
@@ -17,17 +16,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Optional;
 
 import static battle.service.TestUtils.fromResource;
-import static org.assertj.core.api.Assertions.*;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
-public class UnitDataControllerTest {
+public class UnitDtoDataControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -46,7 +46,7 @@ public class UnitDataControllerTest {
                         .contentType("application/json")
                         .content(fromResource("unit/create_unit_x1_y1.json")))
                 .andExpect(status().isCreated());
-        assertThat(repository.findByUnit_PosXAndUnit_PosY(1,1)).isPresent();
+        assertThat(repository.findByPosXAndPosY(1,1)).isPresent();
     }
 
     @Test
@@ -62,11 +62,9 @@ public class UnitDataControllerTest {
     @Test
     public void getUnit_whenUnitExist_thenReturnThisUnit() throws Exception {
 
-        Unit unit = new Unit(2, 3, 10, UnitType.TANK);
+        UnitData unitData =  repository.save(new UnitData(null, 2, 3, 10, UnitType.TANK, 0.0, true));
 
-        repository.save(new UnitData(null, unit, 0.0, true));
-
-        mockMvc.perform(get("/units/x/{posy}/y/{posY}", unit.getPosX(), unit.getPosY()))
+        mockMvc.perform(get("/units/x/{posy}/y/{posY}", unitData.getPosX(), unitData.getPosY()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.posX", is(2)))
                 .andExpect(jsonPath("$.posY", is(3)))
@@ -83,15 +81,14 @@ public class UnitDataControllerTest {
     @Test
     public void setDamageUnit_whenUnitExist_thenDamageIncrease() throws Exception {
 
-        Unit unit = new Unit(1, 1, 10, UnitType.TANK);
-        UnitData expectedUnitData = repository.save(new UnitData(null, unit, 0.0, true));
+        repository.save(new UnitData(null, 1, 1, 10, UnitType.TANK, 0.0, true));
 
         mockMvc.perform(patch("/units/damage")
                         .contentType("application/json")
                         .content(fromResource("unit/unit_damage_x1_y1.json")))
                 .andExpect(status().isNoContent());
 
-        Optional<UnitData> actual = repository.findByUnit_PosXAndUnit_PosY(1,1);
+        Optional<UnitData> actual = repository.findByPosXAndPosY(1,1);
         assertThat(actual).isPresent();
         assertThat(actual.get().getTakenDamage()).isEqualTo(5);
     }
@@ -99,16 +96,14 @@ public class UnitDataControllerTest {
     @Test
     public void setDamageUnit_whenDamageIsMoreProtectionLevel_thenUnitIsDead() throws Exception {
 
-        Unit unit = new Unit(1, 1, 5, UnitType.TANK);
-
-        repository.save(new UnitData(null, unit, 0.0, true));
+        repository.save(new UnitData(null, 1, 1, 5, UnitType.TANK, 0.0, true));
 
         mockMvc.perform(patch("/units/damage")
                 .contentType("application/json")
                 .content(fromResource("unit/unit_damage_x1_y1.json")))
                 .andExpect(status().isNoContent());
 
-        Optional<UnitData> actual = repository.findByUnit_PosXAndUnit_PosY(1,1);
+        Optional<UnitData> actual = repository.findByPosXAndPosY(1,1);
         assertThat(actual).isPresent();
         assertThat(actual.get().getTakenDamage()).isEqualTo(5);
         assertFalse(actual.get().getIsAlive());
@@ -126,19 +121,17 @@ public class UnitDataControllerTest {
     @Test
     public void updatePositionUnit_whenUnitExist_thenUnitGetNewPosition() throws Exception {
 
-        Unit unit = new Unit(1, 2, 5, UnitType.TANK);
-
-        repository.save(new UnitData(null, unit, 0.0, true));
+        repository.save(new UnitData(null, 1, 2, 5, UnitType.TANK, 0.0, true));
 
         mockMvc.perform(patch("/units/position/update")
                 .contentType("application/json")
                 .content(fromResource("unit/update_position_x1_y2_to_x3_y4.json")))
                 .andExpect(status().isNoContent());
 
-        Optional<UnitData> old = repository.findByUnit_PosXAndUnit_PosY(1,2);
+        Optional<UnitData> old = repository.findByPosXAndPosY(1,2);
         assertThat(old).isEmpty();
 
-        Optional<UnitData> actual = repository.findByUnit_PosXAndUnit_PosY(3,4);
+        Optional<UnitData> actual = repository.findByPosXAndPosY(3,4);
         assertThat(actual).isPresent();
     }
 

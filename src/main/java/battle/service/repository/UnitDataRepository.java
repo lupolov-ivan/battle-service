@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface UnitDataRepository extends JpaRepository<UnitData, Integer> {
 
-    Optional<UnitData> findByUnit_PosXAndUnit_PosY(Integer posX, Integer posY);
+    Optional<UnitData> findByPosXAndPosY(Integer posX, Integer posY);
 
 }

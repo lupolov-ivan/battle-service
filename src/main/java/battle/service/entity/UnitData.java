@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -19,9 +16,11 @@ public class UnitData {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Integer id;
-
-    @Embedded
-    private Unit unit;
+    private Integer posX;
+    private Integer posY;
+    private Integer protectionLevel;
+    @Enumerated(EnumType.STRING)
+    private UnitType unitType;
     private Double takenDamage;
     private Boolean isAlive;
 }

@@ -3,7 +3,7 @@ package battle.service.service;
 import battle.service.dto.PositionUpdateDto;
 import battle.service.dto.UnitDamageDto;
 import battle.service.entity.Battlefield;
-import battle.service.entity.Unit;
+import battle.service.dto.UnitDto;
 import battle.service.entity.UnitData;
 import battle.service.entity.UnitType;
 import battle.service.exceptions.NotFoundException;
@@ -19,10 +19,10 @@ public class UnitDataService {
     private final Battlefield battlefield;
     private final UnitDataRepository unitDataRepository;
 
-    public UnitData registerUnit(Unit unit) {
+    public UnitData registerUnit(UnitDto unitDto) {
 
-        int posX = unit.getPosX();
-        int posY = unit.getPosY();
+        int posX = unitDto.getPosX();
+        int posY = unitDto.getPosY();
 
         int width = battlefield.getWidth();
         int length = battlefield.getLength();
@@ -33,34 +33,42 @@ public class UnitDataService {
 
         UnitData unitData = new UnitData();
 
-        unitData.setUnit(unit);
+        unitData.setPosX(unitDto.getPosX());
+        unitData.setPosY(unitDto.getPosY());
+        unitData.setProtectionLevel(unitData.getProtectionLevel());
+        unitData.setUnitType(unitDto.getUnitType());
         unitData.setTakenDamage(0.0);
         unitData.setIsAlive(true);
 
         return unitDataRepository.save(unitData);
     }
 
-    public Unit getUnitByCoordinate(Integer posX, Integer posY) {
-        UnitData maybeUnitData = unitDataRepository.findByUnit_PosXAndUnit_PosY(posX, posY).orElseThrow(NotFoundException::new);
-        return maybeUnitData.getUnit();
+    public UnitDto getUnitByCoordinate(Integer posX, Integer posY) {
+        UnitData maybeUnitData = unitDataRepository.findByPosXAndPosY(posX, posY).orElseThrow(NotFoundException::new);
+        UnitDto unitDto = new UnitDto();
+
+        unitDto.setPosX(maybeUnitData.getPosX());
+        unitDto.setPosY(maybeUnitData.getPosY());
+        unitDto.setProtectionLevel(maybeUnitData.getProtectionLevel());
+        unitDto.setUnitType(maybeUnitData.getUnitType());
+
+        return unitDto;
     }
 
     public void setDamageUnit(UnitDamageDto unitDamageDto) {
 
         UnitData maybeUnitData = unitDataRepository
-                .findByUnit_PosXAndUnit_PosY(unitDamageDto.getPosX(), unitDamageDto.getPosY())
+                .findByPosXAndPosY(unitDamageDto.getPosX(), unitDamageDto.getPosY())
                 .orElseThrow(NotFoundException::new);
-
-        Unit unit = maybeUnitData.getUnit();
 
         double currentDamage = maybeUnitData.getTakenDamage();
         maybeUnitData.setTakenDamage(currentDamage + unitDamageDto.getDamage());
 
-        if ((unit.getUnitType().equals(UnitType.TANK) || unit.getUnitType().equals(UnitType.AFC)) && unit.getProtectionLevel() <= maybeUnitData.getTakenDamage()) {
+        if ((maybeUnitData.getUnitType().equals(UnitType.TANK) || maybeUnitData.getUnitType().equals(UnitType.AFC)) && maybeUnitData.getProtectionLevel() <= maybeUnitData.getTakenDamage()) {
             maybeUnitData.setIsAlive(false);
         }
 
-        if (unit.getUnitType().equals(UnitType.INFANTRY) && (unit.getProtectionLevel()*0.7) <= maybeUnitData.getTakenDamage()) {
+        if (maybeUnitData.getUnitType().equals(UnitType.INFANTRY) && (maybeUnitData.getProtectionLevel()*0.7) <= maybeUnitData.getTakenDamage()) {
             maybeUnitData.setIsAlive(false);
         }
 
@@ -69,13 +77,11 @@ public class UnitDataService {
 
     public void updateUnitPosition(PositionUpdateDto positionUpdateDto) {
         UnitData maybeUnitData = unitDataRepository
-                .findByUnit_PosXAndUnit_PosY(positionUpdateDto.getPosX(), positionUpdateDto.getPosY())
+                .findByPosXAndPosY(positionUpdateDto.getPosX(), positionUpdateDto.getPosY())
                 .orElseThrow(NotFoundException::new);
 
-        Unit unit = maybeUnitData.getUnit();
-
-        unit.setPosX(positionUpdateDto.getNewPosX());
-        unit.setPosY(positionUpdateDto.getNewPosY());
+        maybeUnitData.setPosX(positionUpdateDto.getNewPosX());
+        maybeUnitData.setPosY(positionUpdateDto.getNewPosY());
 
         unitDataRepository.save(maybeUnitData);
     }

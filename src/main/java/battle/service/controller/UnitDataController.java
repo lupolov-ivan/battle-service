@@ -2,7 +2,7 @@ package battle.service.controller;
 
 import battle.service.dto.PositionUpdateDto;
 import battle.service.dto.UnitDamageDto;
-import battle.service.entity.Unit;
+import battle.service.dto.UnitDto;
 import battle.service.entity.UnitData;
 import battle.service.exceptions.NotFoundException;
 import battle.service.exceptions.UnitOutsideBattlefieldException;
@@ -29,17 +29,17 @@ public class UnitDataController {
     private final UnitDataService unitDataService;
 
     @PostMapping
-    public ResponseEntity<UnitData> registerUnit(@RequestBody Unit unit) {
-        unitDataService.registerUnit(unit);
+    public ResponseEntity<UnitData> registerUnit(@RequestBody UnitDto unitDto) {
+        unitDataService.registerUnit(unitDto);
         return ResponseEntity
-                .created(createUriBuilder().build(unit.getPosX(), unit.getPosY()))
+                .created(createUriBuilder().build(unitDto.getPosX(), unitDto.getPosY()))
                 .build();
     }
 
     @GetMapping("/x/{posX}/y/{posY}")
-    public ResponseEntity<Unit> getUnitByCoordinate(@PathVariable Integer posX, @PathVariable Integer posY) {
-        Unit unit = unitDataService.getUnitByCoordinate(posX, posY);
-        return ResponseEntity.ok(unit);
+    public ResponseEntity<UnitDto> getUnitByCoordinate(@PathVariable Integer posX, @PathVariable Integer posY) {
+        UnitDto unitDto = unitDataService.getUnitByCoordinate(posX, posY);
+        return ResponseEntity.ok(unitDto);
     }
 
     @PatchMapping("/damage")
