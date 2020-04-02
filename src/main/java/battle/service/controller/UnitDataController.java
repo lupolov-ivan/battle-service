@@ -1,5 +1,7 @@
 package battle.service.controller;
 
+import battle.service.dto.PositionUpdateDto;
+import battle.service.dto.UnitDamageDto;
 import battle.service.entity.Unit;
 import battle.service.entity.UnitData;
 import battle.service.exceptions.NotFoundException;
@@ -11,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,14 +44,14 @@ public class UnitDataController {
     }
 
     @PatchMapping("/x/{posX}/y/{posY}/damage")
-    public ResponseEntity<?> setDamageUnit(@PathVariable Integer posX, @PathVariable Integer posY, @RequestBody Map<String, Object> updates) {
-        unitDataService.setDamageUnit(posX, posY, updates);
+    public ResponseEntity<?> setDamageUnit(@PathVariable Integer posX, @PathVariable Integer posY, @RequestBody UnitDamageDto unitDamageDto) {
+        unitDataService.setDamageUnit(posX, posY, unitDamageDto);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/x/{posX}/y/{posY}/position/update")
-    public ResponseEntity<?> updateUnitPosition(@PathVariable Integer posX, @PathVariable Integer posY, @RequestBody Map<String, Object> updates) {
-        unitDataService.updateUnitPosition(posX, posY, updates);
+    public ResponseEntity<?> updateUnitPosition(@PathVariable Integer posX, @PathVariable Integer posY, @RequestBody PositionUpdateDto positionUpdateDto) {
+        unitDataService.updateUnitPosition(posX, posY, positionUpdateDto);
         return ResponseEntity.noContent().build();
     }
 

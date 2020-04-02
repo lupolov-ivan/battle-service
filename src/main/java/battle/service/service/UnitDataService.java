@@ -1,5 +1,7 @@
 package battle.service.service;
 
+import battle.service.dto.PositionUpdateDto;
+import battle.service.dto.UnitDamageDto;
 import battle.service.entity.Battlefield;
 import battle.service.entity.Unit;
 import battle.service.entity.UnitData;
@@ -9,8 +11,6 @@ import battle.service.exceptions.UnitOutsideBattlefieldException;
 import battle.service.repository.UnitDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +44,7 @@ public class UnitDataService {
         return unitDataRepository.findByUnit_PosXAndUnit_PosY(posX, posY).orElseThrow(NotFoundException::new);
     }
 
-    public void setDamageUnit(Integer posX, Integer posY, Map<String, Object> updates) {
+    public void setDamageUnit(Integer posX, Integer posY, UnitDamageDto unitDamageDto) {
 
         UnitData maybeUnitData = unitDataRepository
                 .findByUnit_PosXAndUnit_PosY(posX, posY)
@@ -53,13 +53,9 @@ public class UnitDataService {
         Unit unit = maybeUnitData.getUnit();
 
         double currentDamage = maybeUnitData.getTakenDamage();
-        maybeUnitData.setTakenDamage(currentDamage + (double) updates.get("damage"));
+        maybeUnitData.setTakenDamage(currentDamage + unitDamageDto.getDamage());
 
-        if (unit.getUnitType().equals(UnitType.INFANTRY) && (unit.getProtectionLevel()*0.9) <= maybeUnitData.getTakenDamage()) {
-            maybeUnitData.setIsAlive(false);
-        }
-
-        if (unit.getUnitType().equals(UnitType.TANK) && unit.getProtectionLevel() <= maybeUnitData.getTakenDamage()) {
+        if ((unit.getUnitType().equals(UnitType.TANK) || unit.getUnitType().equals(UnitType.AFC)) && unit.getProtectionLevel() <= maybeUnitData.getTakenDamage()) {
             maybeUnitData.setIsAlive(false);
         }
 
@@ -70,15 +66,15 @@ public class UnitDataService {
         unitDataRepository.save(maybeUnitData);
     }
 
-    public void updateUnitPosition(Integer posX, Integer posY, Map<String, Object> updates) {
+    public void updateUnitPosition(Integer posX, Integer posY, PositionUpdateDto positionUpdateDto) {
         UnitData maybeUnitData = unitDataRepository
                 .findByUnit_PosXAndUnit_PosY(posX, posY)
                 .orElseThrow(NotFoundException::new);
 
         Unit unit = maybeUnitData.getUnit();
 
-        unit.setPosX((int) updates.get("newX"));
-        unit.setPosY((int) updates.get("newY"));
+        unit.setPosX(positionUpdateDto.getNewPosX());
+        unit.setPosY(positionUpdateDto.getNewPosY());
 
         unitDataRepository.save(maybeUnitData);
     }
