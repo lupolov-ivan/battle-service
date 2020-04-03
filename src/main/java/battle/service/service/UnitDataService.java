@@ -35,9 +35,9 @@ public class UnitDataService {
 
         unitData.setPosX(unitDto.getPosX());
         unitData.setPosY(unitDto.getPosY());
-        unitData.setProtectionLevel(unitData.getProtectionLevel());
+        unitData.setProtectionLevel(unitDto.getProtectionLevel());
         unitData.setUnitType(unitDto.getUnitType());
-        unitData.setIsAlive(unitData.getIsAlive());
+        unitData.setIsAlive(unitDto.getIsAlive());
         unitData.setTakenDamage(0.0);
 
         return unitDataRepository.save(unitData);

@@ -8,6 +8,7 @@ import battle.service.exceptions.NotFoundException;
 import battle.service.exceptions.UnitOutsideBattlefieldException;
 import battle.service.service.UnitDataService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/units")
+@Slf4j
 public class UnitDataController {
 
     @Value("${uri-builder.scheme}")
@@ -31,6 +33,9 @@ public class UnitDataController {
     @PostMapping
     public ResponseEntity<UnitData> registerUnit(@RequestBody UnitDto unitDto) {
         unitDataService.registerUnit(unitDto);
+
+        log.debug("New Unit {} has been registered", unitDto);
+
         return ResponseEntity
                 .created(createUriBuilder().build(unitDto.getPosX(), unitDto.getPosY()))
                 .build();
@@ -39,18 +44,27 @@ public class UnitDataController {
     @GetMapping("/x/{posX}/y/{posY}")
     public ResponseEntity<UnitDto> getUnitByCoordinate(@PathVariable Integer posX, @PathVariable Integer posY) {
         UnitDto unitDto = unitDataService.getUnitByCoordinate(posX, posY);
+
+        log.debug("Get Unit {}", unitDto);
+
         return ResponseEntity.ok(unitDto);
     }
 
     @PatchMapping("/damage")
     public ResponseEntity<?> setDamageUnit(@RequestBody UnitDamageDto unitDamageDto) {
         unitDataService.setDamageUnit(unitDamageDto);
+
+        log.debug("Unit get damage {}", unitDamageDto.getDamage());
+
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/position/update")
     public ResponseEntity<?> updateUnitPosition(@RequestBody PositionUpdateDto positionUpdateDto) {
         unitDataService.updateUnitPosition(positionUpdateDto);
+
+        log.debug("Unit update position to  ({},{})", positionUpdateDto.getNewPosX(), positionUpdateDto.getNewPosY());
+
         return ResponseEntity.noContent().build();
     }
 
