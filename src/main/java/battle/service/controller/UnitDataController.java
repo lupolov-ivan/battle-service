@@ -34,7 +34,7 @@ public class UnitDataController {
     public ResponseEntity<UnitData> registerUnit(@RequestBody UnitDto unitDto) {
         unitDataService.registerUnit(unitDto);
 
-        log.debug("New Unit {} has been registered", unitDto);
+        log.info("New Unit {} has been registered", unitDto);
 
         return ResponseEntity
                 .created(createUriBuilder().build(unitDto.getPosX(), unitDto.getPosY()))
@@ -45,7 +45,7 @@ public class UnitDataController {
     public ResponseEntity<UnitDto> getUnitByCoordinate(@PathVariable Integer posX, @PathVariable Integer posY) {
         UnitDto unitDto = unitDataService.getUnitByCoordinate(posX, posY);
 
-        log.debug("Get Unit {}", unitDto);
+        log.info("Get Unit {}", unitDto);
 
         return ResponseEntity.ok(unitDto);
     }
@@ -54,7 +54,7 @@ public class UnitDataController {
     public ResponseEntity<?> setDamageUnit(@RequestBody UnitDamageDto unitDamageDto) {
         unitDataService.setDamageUnit(unitDamageDto);
 
-        log.debug("Unit get damage {}", unitDamageDto.getDamage());
+        log.info("Unit get damage {}", unitDamageDto.getDamage());
 
         return ResponseEntity.noContent().build();
     }
@@ -63,7 +63,7 @@ public class UnitDataController {
     public ResponseEntity<?> updateUnitPosition(@RequestBody PositionUpdateDto positionUpdateDto) {
         unitDataService.updateUnitPosition(positionUpdateDto);
 
-        log.debug("Unit update position to  ({},{})", positionUpdateDto.getNewPosX(), positionUpdateDto.getNewPosY());
+        log.info("Unit update position to  ({},{})", positionUpdateDto.getNewPosX(), positionUpdateDto.getNewPosY());
 
         return ResponseEntity.noContent().build();
     }
