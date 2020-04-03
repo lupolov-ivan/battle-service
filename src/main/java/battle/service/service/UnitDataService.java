@@ -37,8 +37,8 @@ public class UnitDataService {
         unitData.setPosY(unitDto.getPosY());
         unitData.setProtectionLevel(unitData.getProtectionLevel());
         unitData.setUnitType(unitDto.getUnitType());
+        unitData.setIsAlive(unitData.getIsAlive());
         unitData.setTakenDamage(0.0);
-        unitData.setIsAlive(true);
 
         return unitDataRepository.save(unitData);
     }
@@ -51,6 +51,7 @@ public class UnitDataService {
         unitDto.setPosY(maybeUnitData.getPosY());
         unitDto.setProtectionLevel(maybeUnitData.getProtectionLevel());
         unitDto.setUnitType(maybeUnitData.getUnitType());
+        unitDto.setIsAlive(maybeUnitData.getIsAlive());
 
         return unitDto;
     }
