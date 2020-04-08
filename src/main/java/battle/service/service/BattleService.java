@@ -23,12 +23,11 @@ public class BattleService {
         battle.setDefenderSubdivisionId(dto.getDefenderSubdivisionId());
         battle.setAttackSubdivisionId(dto.getAttackSubdivisionId());
 
-
         battle.getUnits().addAll(Arrays.asList(
                 new UnitData(null, 2, 48, 10, UnitType.TANK, 0.0, true, null),
-                new UnitData(null, 2, 48, 10, UnitType.TANK, 0.0, true, null),
-                new UnitData(null, 2, 48, 10, UnitType.TANK, 0.0, true, null),
-                new UnitData(null, 2, 48, 10, UnitType.TANK, 0.0, true, null)
+                new UnitData(null, 4, 48, 10, UnitType.TANK, 0.0, true, null),
+                new UnitData(null, 6, 48, 10, UnitType.TANK, 0.0, true, null),
+                new UnitData(null, 8, 48, 10, UnitType.TANK, 0.0, true, null)
         )); // TODO: replace with a real enemy service call.
 
         battle.getUnits().addAll(gunSubdivisionService.getUnitsDataBySubdivisionId(dto.getDefenderSubdivisionId()));
