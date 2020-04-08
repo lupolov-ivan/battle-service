@@ -9,4 +9,5 @@ public interface UnitDataRepository extends JpaRepository<UnitData, Integer> {
 
     Optional<UnitData> findByPosXAndPosY(Integer posX, Integer posY);
 
+    Optional<UnitData> findByPosXAndPosYAndAndBattle_Id(Integer posX, Integer posY, Integer battleId);
 }

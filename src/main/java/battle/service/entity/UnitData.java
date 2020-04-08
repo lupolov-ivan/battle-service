@@ -23,4 +23,7 @@ public class UnitData {
     private UnitType unitType;
     private Double takenDamage;
     private Boolean isAlive;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "battle_id")
+    private Battle battle;
 }

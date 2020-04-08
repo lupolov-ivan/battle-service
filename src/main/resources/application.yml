@@ -9,14 +9,15 @@ spring:
     properties.hibernate.temp.use_jdbc_metadata_defaults: false
     open-in-view: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
 logging:
   level:
     root: info
-uri-builder:
-  scheme: http
-  host: localhost
+server:
   port: 8080
 battlefield:
   width: 20
   length: 50
+gun-service-server:
+  host: localhost
+  port: 8081
