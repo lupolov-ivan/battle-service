@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +36,11 @@ public class BattleService {
         return battleRepository.save(battle);
     }
 
-    public void startBattle(Integer id) {
-        gunSubdivisionService.startSubdivisionPatrolling(id);
+    public void startBattle(Integer battleId) {
+        gunSubdivisionService.startSubdivisionPatrolling(battleId);
+    }
+
+    public Optional<Battle> findBattleById(Integer battleId) {
+        return battleRepository.findById(battleId);
     }
 }

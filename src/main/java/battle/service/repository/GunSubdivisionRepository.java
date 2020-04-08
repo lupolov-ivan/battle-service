@@ -1,9 +1,9 @@
 package battle.service.repository;
 
 import battle.service.dto.UnitDto;
-import battle.service.entity.UnitData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
@@ -32,7 +32,9 @@ public class GunSubdivisionRepository {
         return Arrays.asList(response.getBody());
     }
 
-    public void startSubdivisionPatrolling(Integer id) {
-        String url = template +"/subdivisions/"+ id +"/patrol";
+    public void startSubdivisionPatrolling(Integer subdivisionId, Integer battleId) {
+        String url = template +"/subdivisions/"+ subdivisionId +"/battle/"+ battleId +"/start";
+
+        restTemplate.postForObject(url, HttpEntity.EMPTY, Void.class);
     }
 }

@@ -1,7 +1,9 @@
 package battle.service.service;
 
 import battle.service.dto.UnitDto;
+import battle.service.entity.Battle;
 import battle.service.entity.UnitData;
+import battle.service.exceptions.NotFoundException;
 import battle.service.repository.GunSubdivisionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.List;
 public class GunSubdivisionService {
 
     private final GunSubdivisionRepository gunSubdivisionRepository;
+    private final BattleService battleService;
 
     public List<UnitData> getUnitsDataBySubdivisionId(Integer id) {
         List<UnitDto> unitDtoList = gunSubdivisionRepository.getUnitDtoListBySubdivisionId(id);
@@ -35,7 +38,9 @@ public class GunSubdivisionService {
         return unitDataList;
     }
 
-    public void startSubdivisionPatrolling(Integer id) {
-        gunSubdivisionRepository.startSubdivisionPatrolling(id);
+    public void startSubdivisionPatrolling(Integer battleId) {
+        Battle maybeBattle = battleService.findBattleById(battleId).orElseThrow(NotFoundException::new);
+
+        gunSubdivisionRepository.startSubdivisionPatrolling(maybeBattle.getId(), battleId);
     }
 }
