@@ -8,9 +8,7 @@ import battle.service.repository.BattleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,18 +23,15 @@ public class BattleService {
         battle.setDefenderSubdivisionId(dto.getDefenderSubdivisionId());
         battle.setAttackSubdivisionId(dto.getAttackSubdivisionId());
 
-        List<UnitData> units = new ArrayList<>(
-                Arrays.asList(
-                        new UnitData(null, 2, 48, 10, UnitType.TANK, 0.0, true, null),
-                        new UnitData(null, 2, 48, 10, UnitType.TANK, 0.0, true, null),
-                        new UnitData(null, 2, 48, 10, UnitType.TANK, 0.0, true, null),
-                        new UnitData(null, 2, 48, 10, UnitType.TANK, 0.0, true, null)
-                )
-        ); // TODO: replace with a real enemy service call.
 
-        units.addAll(gunSubdivisionService.getUnitsDataBySubdivisionId(dto.getDefenderSubdivisionId()));
+        battle.getUnits().addAll(Arrays.asList(
+                new UnitData(null, 2, 48, 10, UnitType.TANK, 0.0, true, null),
+                new UnitData(null, 2, 48, 10, UnitType.TANK, 0.0, true, null),
+                new UnitData(null, 2, 48, 10, UnitType.TANK, 0.0, true, null),
+                new UnitData(null, 2, 48, 10, UnitType.TANK, 0.0, true, null)
+        )); // TODO: replace with a real enemy service call.
 
-        battle.setUnits(units);
+        battle.getUnits().addAll(gunSubdivisionService.getUnitsDataBySubdivisionId(dto.getDefenderSubdivisionId()));
 
         return battleRepository.save(battle);
     }
