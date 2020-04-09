@@ -29,4 +29,10 @@ public class ParticipatingSubdivisionService {
     public void deleteParticipantById(Integer id) {
         participatingSubdivisionRepository.deleteById(id);
     }
+
+    public Integer getSubdivisionId(Integer participantId) {
+        ParticipatingSubdivision maybeParticipant = participatingSubdivisionRepository.findById(participantId).orElseThrow(NoClassDefFoundError::new);
+
+        return maybeParticipant.getSubdivisionId();
+    }
 }

@@ -4,12 +4,12 @@ import battle.service.dto.BattleDto;
 import battle.service.entity.Battle;
 import battle.service.entity.UnitData;
 import battle.service.entity.UnitType;
+import battle.service.exceptions.NotFoundException;
 import battle.service.repository.BattleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +17,6 @@ public class BattleService {
 
     private final BattleRepository battleRepository;
     private final GunSubdivisionService gunSubdivisionService;
-
 
     public Battle createBattle(BattleDto dto) {
         Battle battle = new Battle();
@@ -32,15 +31,13 @@ public class BattleService {
         )); // TODO: replace with a real enemy service call.
 
         battle.getUnits().addAll(gunSubdivisionService.getUnitsDataBySubdivisionId(dto.getDefenderSubdivisionId()));
+        battle.getUnits().forEach(unitData -> unitData.setBattle(battle));
 
         return battleRepository.save(battle);
     }
 
     public void startBattle(Integer battleId) {
-        gunSubdivisionService.startSubdivisionPatrolling(battleId);
-    }
-
-    public Optional<Battle> findBattleById(Integer battleId) {
-        return battleRepository.findById(battleId);
+        Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
+        gunSubdivisionService.startSubdivisionPatrolling(maybeBattle.getDefenderSubdivisionId(), battleId);
     }
 }

@@ -9,7 +9,7 @@ spring:
     properties.hibernate.temp.use_jdbc_metadata_defaults: false
     open-in-view: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
 logging:
   level:
     root: info

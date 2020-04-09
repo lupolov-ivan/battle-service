@@ -28,7 +28,7 @@ public class UnitDataController {
         return ResponseEntity.ok(unitDto);
     }
 
-    @PatchMapping("/battle/{battleId}/damage")
+    @PatchMapping("/damage/battle/{battleId}")
     public ResponseEntity<?> setDamageUnit(@PathVariable Integer battleId, @RequestBody UnitDamageDto unitDamageDto) {
         unitDataService.setDamageUnit(battleId, unitDamageDto);
 
@@ -37,7 +37,7 @@ public class UnitDataController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/battle/{battleId}/position/update")
+    @PatchMapping("/position/update/battle/{battleId}")
     public ResponseEntity<?> updateUnitPosition(@PathVariable Integer battleId, @RequestBody PositionUpdateDto positionUpdateDto) {
         unitDataService.updateUnitPosition(battleId, positionUpdateDto);
 

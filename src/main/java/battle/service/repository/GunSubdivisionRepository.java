@@ -1,7 +1,6 @@
 package battle.service.repository;
 
 import battle.service.dto.UnitDto;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -12,16 +11,17 @@ import java.util.Arrays;
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
 public class GunSubdivisionRepository {
 
-    @Value("${gun-service-server.host}")
-    private String host;
-    @Value("${gun-service-server.port}")
-    private Integer port;
-
-    private String template = "http://"+ host +":"+ port;
+    private final String template;
     private final RestTemplate restTemplate;
+
+    public GunSubdivisionRepository(@Value("${gun-service-server.host}") String host,
+                                    @Value("${gun-service-server.port}") Integer port,
+                                    RestTemplate restTemplate) {
+        this.template = "http://"+ host +":"+ port;
+        this.restTemplate = restTemplate;
+    }
 
     public List<UnitDto> getUnitDtoListBySubdivisionId(Integer id) {
 

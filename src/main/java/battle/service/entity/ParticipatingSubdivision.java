@@ -2,9 +2,7 @@ package battle.service.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -15,5 +13,6 @@ public class ParticipatingSubdivision {
     @GeneratedValue(strategy = IDENTITY)
     private Integer id;
     private Integer subdivisionId;
+    @Enumerated(EnumType.STRING)
     private UnitType subdivisionType;
 }

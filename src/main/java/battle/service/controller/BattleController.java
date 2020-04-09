@@ -24,9 +24,9 @@ public class BattleController {
                 .build();
     }
 
-    @PostMapping("{id}/start")
-    public ResponseEntity<?> startBattle(@PathVariable Integer id) {
-        battleService.startBattle(id);
+    @PostMapping("{battleId}/start")
+    public ResponseEntity<?> startBattle(@PathVariable Integer battleId) {
+        battleService.startBattle(battleId);
         return ResponseEntity.ok().build();
     }
 
