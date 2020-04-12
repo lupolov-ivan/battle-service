@@ -6,6 +6,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -17,6 +19,10 @@ public class Battle {
     private Integer id;
     private Integer defenderSubdivisionId;
     private Integer attackSubdivisionId;
-    @OneToMany(mappedBy = "battle", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = ALL, fetch = EAGER)
+    @JoinColumn(name = "battle_id")
     private List<UnitData> units = new ArrayList<>();
+    @OneToMany(cascade = ALL, fetch = EAGER)
+    @JoinColumn(name = "battle_id")
+    private List<Shot> shots = new ArrayList<>();
 }
