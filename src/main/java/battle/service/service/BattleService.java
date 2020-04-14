@@ -13,7 +13,6 @@ import battle.service.repository.BattleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
@@ -104,7 +103,7 @@ public class BattleService {
         Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
         Set<UnitData> units = maybeBattle.getUnits();
 
-        UnitData maybeUnitData = findUnitByCoordinate(units, dto.getPosX(), dto.getPosY()).orElseThrow(NotFoundException::new);
+        UnitData maybeUnitData = findUnitByUnitIdAndType(units, dto.getUnitId(), dto.getUnitType()).orElseThrow(NotFoundException::new);
 
         maybeUnitData.setPosX(dto.getNewPosX());
         maybeUnitData.setPosY(dto.getNewPosY());
@@ -116,6 +115,13 @@ public class BattleService {
         return units.stream()
                 .filter(data -> data.getPosX().equals(posX))
                 .filter(data -> data.getPosY().equals(posY))
+                .findFirst();
+    }
+
+    private Optional<UnitData> findUnitByUnitIdAndType(Set<UnitData> units, Integer unitId, UnitType unitType) {
+        return units.stream()
+                .filter(data -> data.getUnitId().equals(unitId))
+                .filter(data -> data.getUnitType().equals(unitType))
                 .findFirst();
     }
 }

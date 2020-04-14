@@ -22,6 +22,7 @@ public class EnemySubdivisionService {
         unitDtoList.forEach(dto -> {
             UnitData data = new UnitData();
 
+            data.setUnitId(dto.getUnitId());
             data.setPosX(dto.getPosX());
             data.setPosY(dto.getPosY());
             data.setProtectionLevel(dto.getProtectionLevel());

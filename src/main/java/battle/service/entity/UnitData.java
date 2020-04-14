@@ -16,6 +16,7 @@ public class UnitData {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Integer id;
+    private Integer unitId;
     private Integer posX;
     private Integer posY;
     private Integer protectionLevel;
