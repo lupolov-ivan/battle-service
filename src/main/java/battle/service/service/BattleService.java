@@ -4,17 +4,18 @@ import battle.service.dto.BattleDto;
 import battle.service.dto.PositionUpdateDto;
 import battle.service.dto.UnitDamageDto;
 import battle.service.dto.UnitDto;
-import battle.service.entity.*;
+import battle.service.entity.Battle;
+import battle.service.entity.Shot;
+import battle.service.entity.UnitData;
+import battle.service.entity.UnitType;
 import battle.service.exceptions.NotFoundException;
 import battle.service.repository.BattleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import sun.tools.jconsole.Plotter;
 
-import java.security.acl.NotOwnerException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static battle.service.entity.ShotResult.HIT;
 import static battle.service.entity.ShotResult.MISS;
@@ -52,7 +53,7 @@ public class BattleService {
     public UnitDto getUnitByCoordinate(Integer posX, Integer posY, Integer battleId) {
 
         Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
-        List<UnitData> units = maybeBattle.getUnits();
+        Set<UnitData> units = maybeBattle.getUnits();
 
         UnitData maybeUnitData = findUnitByCoordinate(units, posX, posY).orElseThrow(NotFoundException::new);
 
@@ -69,7 +70,7 @@ public class BattleService {
 
     public void setDamageUnit(Integer battleId, UnitDamageDto dto) {
         Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
-        List<UnitData> units = maybeBattle.getUnits();
+        Set<UnitData> units = maybeBattle.getUnits();
 
         Optional<UnitData> maybeUnitData = findUnitByCoordinate(units, dto.getPosX(), dto.getPosY());
 
@@ -106,7 +107,7 @@ public class BattleService {
 
     public void updateUnitPosition(Integer battleId, PositionUpdateDto dto) {
         Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
-        List<UnitData> units = maybeBattle.getUnits();
+        Set<UnitData> units = maybeBattle.getUnits();
 
         UnitData maybeUnitData = findUnitByCoordinate(units, dto.getPosX(), dto.getPosY()).orElseThrow(NotFoundException::new);
 
@@ -116,7 +117,7 @@ public class BattleService {
         battleRepository.save(maybeBattle);
     }
 
-    private Optional<UnitData> findUnitByCoordinate(List<UnitData> units, Integer posX, Integer posY) {
+    private Optional<UnitData> findUnitByCoordinate(Set<UnitData> units, Integer posX, Integer posY) {
         return units.stream()
                 .filter(data -> data.getPosX().equals(posX))
                 .filter(data -> data.getPosY().equals(posY))

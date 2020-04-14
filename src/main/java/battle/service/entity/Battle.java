@@ -3,11 +3,11 @@ package battle.service.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -21,8 +21,8 @@ public class Battle {
     private Integer attackSubdivisionId;
     @OneToMany(cascade = ALL, fetch = EAGER)
     @JoinColumn(name = "battle_id")
-    private List<UnitData> units = new ArrayList<>();
+    private Set<UnitData> units = new HashSet<>();
     @OneToMany(cascade = ALL, fetch = EAGER)
     @JoinColumn(name = "battle_id")
-    private List<Shot> shots = new ArrayList<>();
+    private Set<Shot> shots = new HashSet<>();
 }

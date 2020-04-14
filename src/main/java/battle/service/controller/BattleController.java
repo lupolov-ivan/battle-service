@@ -5,9 +5,11 @@ import battle.service.dto.PositionUpdateDto;
 import battle.service.dto.UnitDamageDto;
 import battle.service.dto.UnitDto;
 import battle.service.entity.Battle;
+import battle.service.exceptions.NotFoundException;
 import battle.service.service.BattleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,4 +63,8 @@ public class BattleController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Resource doesn't exist or has been deleted")
+    public void handleNotFound() { }
 }

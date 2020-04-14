@@ -15,8 +15,9 @@ public class Shot {
     @GeneratedValue
     private Integer id;
     private Integer targetId;
+    @Enumerated(STRING)
     private UnitType targetType;
     private Double damage;
-    @Enumerated(value = STRING)
+    @Enumerated(STRING)
     private ShotResult shotResult;
 }
