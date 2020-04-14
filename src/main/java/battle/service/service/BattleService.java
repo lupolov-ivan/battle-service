@@ -60,7 +60,7 @@ public class BattleService {
         UnitDto unitDto = new UnitDto();
 
         unitDto.setPosX(maybeUnitData.getPosX());
-        unitDto.setPosY(maybeUnitData.getPosX());
+        unitDto.setPosY(maybeUnitData.getPosY());
         unitDto.setProtectionLevel(maybeUnitData.getProtectionLevel());
         unitDto.setUnitType(maybeUnitData.getUnitType());
         unitDto.setIsAlive(maybeUnitData.getIsAlive());
