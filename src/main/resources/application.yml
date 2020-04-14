@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/battle_service_db
+    url: jdbc:postgresql://192.168.99.100:5432/postgres
     username: postgres
     password: postgres
   jpa:
@@ -9,15 +9,18 @@ spring:
     properties.hibernate.temp.use_jdbc_metadata_defaults: false
     open-in-view: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create-drop
 logging:
   level:
     root: info
 server:
-  port: 8080
+  port: 8082
 battlefield:
   width: 20
   length: 50
 gun-service-server:
   host: localhost
   port: 8081
+enemy-service-server:
+  host: localhost
+  port: 8085

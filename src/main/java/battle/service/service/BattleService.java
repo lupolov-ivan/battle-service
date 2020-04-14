@@ -26,19 +26,14 @@ public class BattleService {
 
     private final BattleRepository battleRepository;
     private final GunSubdivisionService gunSubdivisionService;
+    private final EnemySubdivisionService enemySubdivisionService;
 
     public Battle createBattle(BattleDto dto) {
         Battle battle = new Battle();
         battle.setDefenderSubdivisionId(dto.getDefenderSubdivisionId());
         battle.setAttackSubdivisionId(dto.getAttackSubdivisionId());
 
-        battle.getUnits().addAll(Arrays.asList(
-                new UnitData(null, 2, 48, 10, UnitType.TANK, 0.0, true),
-                new UnitData(null, 4, 48, 10, UnitType.TANK, 0.0, true),
-                new UnitData(null, 6, 48, 10, UnitType.TANK, 0.0, true),
-                new UnitData(null, 8, 48, 10, UnitType.TANK, 0.0, true)
-        )); // TODO: replace with a real battle.getUnits().addAll(enemySubdivisionService.getUnitsDataBySubdivisionId(dto.getAttackSubdivisionId())).
-
+        battle.getUnits().addAll(enemySubdivisionService.getUnitsDataBySubdivisionId(dto.getAttackSubdivisionId()));
         battle.getUnits().addAll(gunSubdivisionService.getUnitsDataBySubdivisionId(dto.getDefenderSubdivisionId()));
 
         return battleRepository.save(battle);
@@ -47,7 +42,7 @@ public class BattleService {
     public void startBattle(Integer battleId) {
         Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
         gunSubdivisionService.startSubdivisionPatrolling(maybeBattle.getDefenderSubdivisionId(), battleId);
-        // TODO: put call enemyDivisionService(maybeBattle.getAttackSubdivisionId(), battleId);
+        enemySubdivisionService.startSubdivisionMoving(maybeBattle.getAttackSubdivisionId(), battleId);
     }
 
     public UnitDto getUnitByCoordinate(Integer posX, Integer posY, Integer battleId) {
