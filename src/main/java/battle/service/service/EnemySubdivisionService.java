@@ -40,4 +40,8 @@ public class EnemySubdivisionService {
 
         enemySubdivisionRepository.startSubdivisionMoving(subdivisionId, battleId);
     }
+
+    public void setEnemyIsDeadStatus(Integer enemyId) {
+        enemySubdivisionRepository.setEnemyDeadStatus(enemyId);
+    }
 }

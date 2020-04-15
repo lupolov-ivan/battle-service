@@ -77,12 +77,20 @@ public class BattleService {
             double currentDamage = unit.getTakenDamage();
             unit.setTakenDamage(currentDamage + dto.getDamage());
 
-            if ((unit.getUnitType().equals(UnitType.TANK) || unit.getUnitType().equals(UnitType.AFC)) && unit.getProtectionLevel() <= unit.getTakenDamage()) {
+            if (unit.getUnitType().equals(UnitType.TANK)
+                    && unit.getProtectionLevel() <= unit.getTakenDamage()) {
+                unit.setIsAlive(false);
+                enemySubdivisionService.setEnemyIsDeadStatus(unit.getUnitId());
+            }
+
+            if (unit.getUnitType().equals(UnitType.AFC)
+                    && unit.getProtectionLevel() <= unit.getTakenDamage()) {
                 unit.setIsAlive(false);
             }
 
             if (unit.getUnitType().equals(UnitType.INFANTRY) && (unit.getProtectionLevel() * 0.7) <= unit.getTakenDamage()) {
                 unit.setIsAlive(false);
+                enemySubdivisionService.setEnemyIsDeadStatus(unit.getUnitId());
             }
 
             shot.setTargetId(unit.getId());

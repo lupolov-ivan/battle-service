@@ -38,4 +38,10 @@ public class EnemySubdivisionRepository {
 
         restTemplate.postForObject(url, HttpEntity.EMPTY, Void.class);
     }
+
+    public void setEnemyDeadStatus(Integer enemyId) {
+        String url = template + "/subdivisions/" + enemyId + "/dead";
+
+        restTemplate.postForObject(url, HttpEntity.EMPTY, Void.class);
+    }
 }
