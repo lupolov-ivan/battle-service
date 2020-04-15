@@ -7,15 +7,6 @@ create table battle
     defender_subdivision_id integer
 );
 
-create table participating_subdivision
-(
-    id               serial not null
-        constraint participating_subdivision_pkey
-            primary key,
-    subdivision_id   integer,
-    subdivision_type varchar(255)
-);
-
 create table shot
 (
     id          integer not null
@@ -26,8 +17,8 @@ create table shot
     target_id   integer,
     target_type varchar(255),
     battle_id   integer
-        constraint fk94t3b7xyfdmptxbhe19vh96fx
-            references battle
+        constraint fk_shot_battle_id_1
+            references battle (id)
 );
 
 create table unit_data
@@ -43,7 +34,7 @@ create table unit_data
     protection_level integer,
     taken_damage     double precision,
     battle_id        integer
-        constraint fkpq37a5r1hnnb6ry35rjmpdobw
-            references battle
+        constraint fk_unit_data_battle_id_1
+            references battle (id)
 );
 
