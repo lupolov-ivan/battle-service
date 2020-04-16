@@ -16,6 +16,7 @@ public class Battle {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "battle_id")
     private Integer id;
     private Integer defenderSubdivisionId;
     private Integer attackSubdivisionId;

@@ -2,16 +2,19 @@ package battle.service.repository;
 
 
 import battle.service.dto.UnitDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class EnemySubdivisionRepository {
 
     private final String template;
@@ -40,8 +43,12 @@ public class EnemySubdivisionRepository {
     }
 
     public void setEnemyDeadStatus(Integer enemyId) {
-        String url = template + "/subdivisions/" + enemyId + "/dead";
+        String url = template + "/subdivisions/units/" + enemyId + "/dead";
 
-        restTemplate.postForObject(url, HttpEntity.EMPTY, Void.class);
+        try {
+            restTemplate.patchForObject(url, HttpEntity.EMPTY, Void.class);
+        } catch (HttpClientErrorException ignored) {
+            log.error("Unit with id '{}' to killing is not exist", enemyId);
+        }
     }
 }

@@ -1,6 +1,6 @@
 create table battle
 (
-    id                      serial not null
+    battle_id                      serial not null
         constraint battle_pkey
             primary key,
     attack_subdivision_id   integer,
@@ -9,7 +9,7 @@ create table battle
 
 create table shot
 (
-    id          integer not null
+    id          serial not null
         constraint shot_pkey
             primary key,
     damage      double precision,
@@ -18,7 +18,7 @@ create table shot
     target_type varchar(255),
     battle_id   integer
         constraint fk_shot_battle_id_1
-            references battle (id)
+            references battle (battle_id)
 );
 
 create table unit_data
@@ -35,6 +35,6 @@ create table unit_data
     taken_damage     double precision,
     battle_id        integer
         constraint fk_unit_data_battle_id_1
-            references battle (id)
+            references battle (battle_id)
 );
 
