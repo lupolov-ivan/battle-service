@@ -40,7 +40,7 @@ public class BattleController {
     }
 
     @GetMapping("/{battleId}/units")
-    public ResponseEntity<Set<UnitDto>> getUnitByCoordinate(@PathVariable Integer battleId) {
+    public ResponseEntity<Set<UnitDto>> getUnitsByOnBattlefield(@PathVariable Integer battleId) {
         Set<UnitDto> unitDto = battleService.getUnitsByBattleId( battleId);
 
         log.info("Get Unit {}", unitDto);
