@@ -11,14 +11,18 @@ import battle.service.entity.UnitType;
 import battle.service.exceptions.NotFoundException;
 import battle.service.repository.BattleRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import static battle.service.entity.ShotResult.HIT;
 import static battle.service.entity.ShotResult.MISS;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BattleService {
@@ -42,24 +46,6 @@ public class BattleService {
         Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
         gunSubdivisionService.startSubdivisionPatrolling(maybeBattle.getDefenderSubdivisionId(), battleId);
         enemySubdivisionService.startSubdivisionMoving(maybeBattle.getAttackSubdivisionId(), battleId);
-    }
-
-    public UnitDto getUnitByCoordinate(Integer posX, Integer posY, Integer battleId) {
-
-        Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
-        Set<UnitData> units = maybeBattle.getUnits();
-
-        UnitData maybeUnitData = findUnitByCoordinate(units, posX, posY).orElseThrow(NotFoundException::new);
-
-        UnitDto unitDto = new UnitDto();
-
-        unitDto.setPosX(maybeUnitData.getPosX());
-        unitDto.setPosY(maybeUnitData.getPosY());
-        unitDto.setProtectionLevel(maybeUnitData.getProtectionLevel());
-        unitDto.setUnitType(maybeUnitData.getUnitType());
-        unitDto.setIsAlive(maybeUnitData.getIsAlive());
-
-        return unitDto;
     }
 
     public void setDamageUnit(Integer battleId, UnitDamageDto dto) {
@@ -98,8 +84,10 @@ public class BattleService {
             shot.setDamage(dto.getDamage());
             shot.setShotResult(HIT);
 
+            log.info("HIT");
         } else {
             shot.setShotResult(MISS);
+            log.info("MISS");
         }
 
         maybeBattle.getShots().add(shot);
@@ -117,6 +105,25 @@ public class BattleService {
         maybeUnitData.setPosY(dto.getNewPosY());
 
         battleRepository.save(maybeBattle);
+    }
+
+    public Set<UnitDto> getUnitsByBattleId(Integer battleId) {
+
+        Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
+        Set<UnitDto> unitDtos = new HashSet<>();
+        maybeBattle.getUnits().forEach(unitData -> {
+            UnitDto unitDto = new UnitDto();
+            unitDto.setPosX(unitData.getPosX());
+            unitDto.setPosY(unitData.getPosY());
+            unitDto.setUnitType(unitData.getUnitType());
+            unitDto.setProtectionLevel(unitData.getProtectionLevel());
+            unitDto.setIsAlive(unitData.getIsAlive());
+            unitDto.setUnitId(unitData.getUnitId());
+
+            unitDtos.add(unitDto);
+        });
+
+        return unitDtos;
     }
 
     private Optional<UnitData> findUnitByCoordinate(Set<UnitData> units, Integer posX, Integer posY) {

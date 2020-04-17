@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,9 +39,9 @@ public class BattleController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{battleId}/units/x/{posX}/y/{posY}")
-    public ResponseEntity<UnitDto> getUnitByCoordinate(@PathVariable Integer posX, @PathVariable Integer posY, @PathVariable Integer battleId) {
-        UnitDto unitDto = battleService.getUnitByCoordinate(posX, posY, battleId);
+    @GetMapping("/{battleId}/units")
+    public ResponseEntity<Set<UnitDto>> getUnitByCoordinate(@PathVariable Integer battleId) {
+        Set<UnitDto> unitDto = battleService.getUnitsByBattleId( battleId);
 
         log.info("Get Unit {}", unitDto);
 
