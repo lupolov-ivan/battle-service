@@ -27,7 +27,7 @@ public class GunSubdivisionService {
             data.setPosY(dto.getPosY());
             data.setProtectionLevel(dto.getProtectionLevel());
             data.setUnitType(dto.getUnitType());
-            data.setIsAlive(dto.getIsAlive());
+            data.setUnitState(dto.getUnitState());
             data.setTakenDamage(0.0);
 
             unitDataList.add(data);

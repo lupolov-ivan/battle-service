@@ -7,6 +7,8 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.Clock;
+
 @SpringBootApplication
 public class BattleServiceApplication {
 
@@ -25,6 +27,11 @@ public class BattleServiceApplication {
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         restTemplate.setRequestFactory(requestFactory);
         return restTemplate;
+    }
+
+    @Bean
+    public Clock clock() {
+        return Clock.systemUTC();
     }
 }
 

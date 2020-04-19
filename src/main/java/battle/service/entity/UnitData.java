@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static javax.persistence.EnumType.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -20,8 +21,9 @@ public class UnitData {
     private Integer posX;
     private Integer posY;
     private Integer protectionLevel;
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     private UnitType unitType;
+    @Enumerated(STRING)
+    private UnitState unitState;
     private Double takenDamage;
-    private Boolean isAlive;
 }

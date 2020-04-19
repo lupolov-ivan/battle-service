@@ -5,10 +5,9 @@ import battle.service.entity.UnitType;
 import lombok.Data;
 
 @Data
-public class PositionUpdateDto {
+public class SetUnitStateDto {
 
     private Integer unitId;
     private UnitType unitType;
-    private Integer newPosX;
-    private Integer newPosY;
+    private UnitState unitState;
 }

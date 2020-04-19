@@ -3,6 +3,7 @@ package battle.service.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,10 +21,16 @@ public class Battle {
     private Integer id;
     private Integer defenderSubdivisionId;
     private Integer attackSubdivisionId;
+
     @OneToMany(cascade = ALL, fetch = EAGER)
     @JoinColumn(name = "battle_id")
     private Set<UnitData> units = new HashSet<>();
+
     @OneToMany(cascade = ALL, fetch = EAGER)
     @JoinColumn(name = "battle_id")
     private Set<Shot> shots = new HashSet<>();
+
+    private LocalDateTime startAt;
+    private LocalDateTime endAt;
+    private Boolean isOver;
 }

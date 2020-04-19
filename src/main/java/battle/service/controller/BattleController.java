@@ -1,9 +1,6 @@
 package battle.service.controller;
 
-import battle.service.dto.BattleDto;
-import battle.service.dto.PositionUpdateDto;
-import battle.service.dto.UnitDamageDto;
-import battle.service.dto.UnitDto;
+import battle.service.dto.*;
 import battle.service.entity.Battle;
 import battle.service.exceptions.NotFoundException;
 import battle.service.service.BattleService;
@@ -41,11 +38,11 @@ public class BattleController {
 
     @GetMapping("/{battleId}/units")
     public ResponseEntity<Set<UnitDto>> getUnitsByOnBattlefield(@PathVariable Integer battleId) {
-        Set<UnitDto> unitDto = battleService.getUnitsByBattleId( battleId);
+        Set<UnitDto> units = battleService.getUnitsByBattleId( battleId);
 
-        log.info("Get Unit {}", unitDto);
+        log.info("Get Units {}", units);
 
-        return ResponseEntity.ok(unitDto);
+        return ResponseEntity.ok(units);
     }
 
     @PatchMapping("/{battleId}/units/damage")
@@ -62,6 +59,15 @@ public class BattleController {
         battleService.updateUnitPosition(battleId, positionUpdateDto);
 
         log.info("Unit update position to  ({},{})", positionUpdateDto.getNewPosX(), positionUpdateDto.getNewPosY());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{battleId}/units/state/update")
+    public ResponseEntity<?> updateUnitState(@PathVariable Integer battleId, @RequestBody SetUnitStateDto dto) {
+        battleService.updateUnitState(battleId, dto);
+
+        log.info("Unit '{}' changed state to {}", dto.getUnitId(), dto.getUnitState());
 
         return ResponseEntity.noContent().build();
     }

@@ -1,19 +1,16 @@
 package battle.service.service;
 
-import battle.service.dto.BattleDto;
-import battle.service.dto.PositionUpdateDto;
-import battle.service.dto.UnitDamageDto;
-import battle.service.dto.UnitDto;
-import battle.service.entity.Battle;
-import battle.service.entity.Shot;
-import battle.service.entity.UnitData;
-import battle.service.entity.UnitType;
+import battle.service.dto.*;
+import battle.service.entity.*;
 import battle.service.exceptions.NotFoundException;
 import battle.service.repository.BattleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +18,7 @@ import java.util.Set;
 
 import static battle.service.entity.ShotResult.HIT;
 import static battle.service.entity.ShotResult.MISS;
+import static battle.service.entity.UnitState.DEAD;
 
 @Slf4j
 @Service
@@ -30,22 +28,31 @@ public class BattleService {
     private final BattleRepository battleRepository;
     private final GunSubdivisionService gunSubdivisionService;
     private final EnemySubdivisionService enemySubdivisionService;
+    private final UnitDataService unitDataService;
+    private final Clock clock;
 
     public Battle createBattle(BattleDto dto) {
         Battle battle = new Battle();
+
         battle.setDefenderSubdivisionId(dto.getDefenderSubdivisionId());
         battle.setAttackSubdivisionId(dto.getAttackSubdivisionId());
 
         battle.getUnits().addAll(enemySubdivisionService.getUnitsDataBySubdivisionId(dto.getAttackSubdivisionId()));
         battle.getUnits().addAll(gunSubdivisionService.getUnitsDataBySubdivisionId(dto.getDefenderSubdivisionId()));
 
+        battle.setIsOver(false);
+
         return battleRepository.save(battle);
     }
 
     public void startBattle(Integer battleId) {
         Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
+
+        maybeBattle.setStartAt(LocalDateTime.now(clock));
         gunSubdivisionService.startSubdivisionPatrolling(maybeBattle.getDefenderSubdivisionId(), battleId);
         enemySubdivisionService.startSubdivisionMoving(maybeBattle.getAttackSubdivisionId(), battleId);
+
+        battleRepository.save(maybeBattle);
     }
 
     public void setDamageUnit(Integer battleId, UnitDamageDto dto) {
@@ -63,19 +70,17 @@ public class BattleService {
             double currentDamage = unit.getTakenDamage();
             unit.setTakenDamage(currentDamage + dto.getDamage());
 
-            if (unit.getUnitType().equals(UnitType.TANK)
-                    && unit.getProtectionLevel() <= unit.getTakenDamage()) {
-                unit.setIsAlive(false);
+            if (unit.getUnitType().equals(UnitType.TANK) && unit.getProtectionLevel() <= unit.getTakenDamage()) {
+                unit.setUnitState(DEAD);
                 enemySubdivisionService.setEnemyIsDeadStatus(unit.getUnitId());
             }
 
-            if (unit.getUnitType().equals(UnitType.AFC)
-                    && unit.getProtectionLevel() <= unit.getTakenDamage()) {
-                unit.setIsAlive(false);
+            if (unit.getUnitType().equals(UnitType.AFC) && unit.getProtectionLevel() <= unit.getTakenDamage()) {
+                unit.setUnitState(DEAD);
             }
 
             if (unit.getUnitType().equals(UnitType.INFANTRY) && (unit.getProtectionLevel() * 0.7) <= unit.getTakenDamage()) {
-                unit.setIsAlive(false);
+                unit.setUnitState(DEAD);
                 enemySubdivisionService.setEnemyIsDeadStatus(unit.getUnitId());
             }
 
@@ -107,6 +112,17 @@ public class BattleService {
         battleRepository.save(maybeBattle);
     }
 
+    public void updateUnitState(Integer battleId, SetUnitStateDto dto) {
+        Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
+        Set<UnitData> units = maybeBattle.getUnits();
+
+        UnitData maybeUnitData = findUnitByUnitIdAndType(units, dto.getUnitId(), dto.getUnitType()).orElseThrow(NotFoundException::new);
+
+        maybeUnitData.setUnitState(dto.getUnitState());
+
+        battleRepository.save(maybeBattle);
+    }
+
     public Set<UnitDto> getUnitsByBattleId(Integer battleId) {
 
         Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
@@ -117,7 +133,7 @@ public class BattleService {
             unitDto.setPosY(unitData.getPosY());
             unitDto.setUnitType(unitData.getUnitType());
             unitDto.setProtectionLevel(unitData.getProtectionLevel());
-            unitDto.setIsAlive(unitData.getIsAlive());
+            unitDto.setUnitState(unitData.getUnitState());
             unitDto.setUnitId(unitData.getUnitId());
 
             unitDtos.add(unitDto);
