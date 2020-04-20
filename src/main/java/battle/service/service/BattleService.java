@@ -1,7 +1,10 @@
 package battle.service.service;
 
 import battle.service.dto.*;
-import battle.service.entity.*;
+import battle.service.entity.Battle;
+import battle.service.entity.Shot;
+import battle.service.entity.UnitData;
+import battle.service.entity.UnitType;
 import battle.service.exceptions.NotFoundException;
 import battle.service.repository.BattleRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,15 +13,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static battle.service.entity.ShotResult.HIT;
-import static battle.service.entity.ShotResult.MISS;
-import static battle.service.entity.UnitState.DEAD;
+import static battle.service.entity.ShotResult.*;
+import static battle.service.entity.UnitState.*;
+import static battle.service.entity.UnitType.*;
 
 @Slf4j
 @Service
@@ -49,10 +50,26 @@ public class BattleService {
         Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
 
         maybeBattle.setStartAt(LocalDateTime.now(clock));
+
         gunSubdivisionService.startSubdivisionPatrolling(maybeBattle.getDefenderSubdivisionId(), battleId);
         enemySubdivisionService.startSubdivisionMoving(maybeBattle.getAttackSubdivisionId(), battleId);
 
+        while (isBattleGoingOn(maybeBattle)){}
+
+        maybeBattle.setEndAt(LocalDateTime.now(clock));
         battleRepository.save(maybeBattle);
+    }
+
+    private boolean isBattleGoingOn(Battle maybeBattle) {
+
+        Integer quantityEnemies = unitDataService.countAllEnemiesByBattleId(maybeBattle.getId());
+        Integer quantityGuns = unitDataService.countAllGunsByBattleId(maybeBattle.getId());
+
+        Integer quantityDeadEnemies = unitDataService.countAllEnemiesByBattleIdAndUnitState(maybeBattle.getId(), DEAD);
+        Integer quantityEnemiesReachedCriticalDistance = unitDataService.countAllEnemiesByBattleIdAndUnitState(maybeBattle.getId(), CRITICAL_DISTANCE_REACHED);
+        Integer quantityGunsWithoutShells = unitDataService.countAllGunsByBattleIdAndUnitState(maybeBattle.getId(), NO_SHELLS);
+
+        return quantityEnemiesReachedCriticalDistance <= 0 && !quantityDeadEnemies.equals(quantityEnemies) && !quantityGuns.equals(quantityGunsWithoutShells);
     }
 
     public void setDamageUnit(Integer battleId, UnitDamageDto dto) {
@@ -70,7 +87,7 @@ public class BattleService {
             double currentDamage = unit.getTakenDamage();
             unit.setTakenDamage(currentDamage + dto.getDamage());
 
-            if (unit.getUnitType().equals(UnitType.TANK) && unit.getProtectionLevel() <= unit.getTakenDamage()) {
+            if (unit.getUnitType().equals(TANK) && unit.getProtectionLevel() <= unit.getTakenDamage()) {
                 unit.setUnitState(DEAD);
                 enemySubdivisionService.setEnemyIsDeadStatus(unit.getUnitId());
             }
