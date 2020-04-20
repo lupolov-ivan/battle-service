@@ -19,9 +19,9 @@ public class UnitDataService {
     }
 
     public Integer countAllEnemiesByBattleIdAndUnitState(Integer battleId, UnitState state) {
-        return unitDataRepository.countAllEnemiesByBattleIdAndUnitState(battleId, state);
+        return unitDataRepository.countAllEnemiesByBattleIdAndUnitState(battleId, state.name());
     }
     public Integer countAllGunsByBattleIdAndUnitState(Integer battleId, UnitState state) {
-        return unitDataRepository.countAllGunsByBattleIdAndUnitState(battleId, state);
+        return unitDataRepository.countAllGunsByBattleIdAndUnitState(battleId, state.name());
     }
 }
