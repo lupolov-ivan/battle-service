@@ -54,20 +54,30 @@ public class BattleService {
         gunSubdivisionService.startSubdivisionPatrolling(maybeBattle.getDefenderSubdivisionId(), battleId);
         enemySubdivisionService.startSubdivisionMoving(maybeBattle.getAttackSubdivisionId(), battleId);
 
-        while (isBattleGoingOn(maybeBattle)){}
+        battleRepository.save(maybeBattle);
+
+        new Thread(() -> {
+            stopBattle(maybeBattle.getId());
+        }).start();
+    }
+
+    public void stopBattle(Integer battleId) {
+        while (isBattleGoingOn(battleId)){}
+
+        Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
 
         maybeBattle.setEndAt(LocalDateTime.now(clock));
         battleRepository.save(maybeBattle);
     }
 
-    private boolean isBattleGoingOn(Battle maybeBattle) {
+    private boolean isBattleGoingOn(Integer battleId) {
 
-        Integer quantityEnemies = unitDataService.countAllEnemiesByBattleId(maybeBattle.getId());
-        Integer quantityGuns = unitDataService.countAllGunsByBattleId(maybeBattle.getId());
+        Integer quantityEnemies = unitDataService.countAllEnemiesByBattleId(battleId);
+        Integer quantityGuns = unitDataService.countAllGunsByBattleId(battleId);
 
-        Integer quantityDeadEnemies = unitDataService.countAllEnemiesByBattleIdAndUnitState(maybeBattle.getId(), DEAD);
-        Integer quantityEnemiesReachedCriticalDistance = unitDataService.countAllEnemiesByBattleIdAndUnitState(maybeBattle.getId(), CRITICAL_DISTANCE_REACHED);
-        Integer quantityGunsWithoutShells = unitDataService.countAllGunsByBattleIdAndUnitState(maybeBattle.getId(), NO_SHELLS);
+        Integer quantityDeadEnemies = unitDataService.countAllEnemiesByBattleIdAndUnitState(battleId, DEAD);
+        Integer quantityEnemiesReachedCriticalDistance = unitDataService.countAllEnemiesByBattleIdAndUnitState(battleId, CRITICAL_DISTANCE_REACHED);
+        Integer quantityGunsWithoutShells = unitDataService.countAllGunsByBattleIdAndUnitState(battleId, NO_SHELLS);
 
         return quantityEnemiesReachedCriticalDistance <= 0 && !quantityDeadEnemies.equals(quantityEnemies) && !quantityGuns.equals(quantityGunsWithoutShells);
     }
