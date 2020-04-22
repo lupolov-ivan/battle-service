@@ -29,7 +29,7 @@ public class EnemySubdivisionRepository {
 
     public List<UnitDto> getUnitDtoListBySubdivisionId(Integer id) {
 
-        String url = template +"/subdivisions/"+ id;
+        String url = template +"/subdivisions/"+ id + "/enemies";
 
         ResponseEntity<UnitDto[]> response = restTemplate.getForEntity(url, UnitDto[].class);
 

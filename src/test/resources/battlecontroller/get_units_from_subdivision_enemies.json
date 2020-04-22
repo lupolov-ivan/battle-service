@@ -1,0 +1,34 @@
+[
+  {
+    "unitId": 1,
+    "posX": 1,
+    "posY": 0,
+    "protectionLevel": 100,
+    "unitType": "TANK",
+    "unitState": "ACTIVE"
+  },
+  {
+    "unitId": 2,
+    "posX": 2,
+    "posY": 0,
+    "protectionLevel": 100,
+    "unitType": "TANK",
+    "unitState": "ACTIVE"
+  },
+  {
+    "unitId": 3,
+    "posX": 3,
+    "posY": 0,
+    "protectionLevel": 100,
+    "unitType": "INFANTRY",
+    "unitState": "ACTIVE"
+  },
+  {
+    "unitId":4,
+    "posX": 4,
+    "posY": 0,
+    "protectionLevel": 100,
+    "unitType": "INFANTRY",
+    "unitState": "ACTIVE"
+  }
+]

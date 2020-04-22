@@ -25,7 +25,7 @@ public class GunSubdivisionRepository {
 
     public List<UnitDto> getUnitDtoListBySubdivisionId(Integer id) {
 
-        String url = template +"/subdivisions/"+ id;
+        String url = template +"/subdivisions/"+ id + "/guns";
 
         ResponseEntity<UnitDto[]> response = restTemplate.getForEntity(url, UnitDto[].class);
 
