@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -36,5 +37,14 @@ public class GunSubdivisionRepository {
         String url = template +"/subdivisions/"+ subdivisionId +"/battle/"+ battleId +"/start";
 
         restTemplate.postForObject(url, HttpEntity.EMPTY, Void.class);
+    }
+
+    public void setGunsDeadStatus(Integer subdivisionId) {
+        String url = template + "/subdivisions"+ subdivisionId +"/units/state/dead";
+
+        try {
+            restTemplate.patchForObject(url, HttpEntity.EMPTY, Void.class);
+        } catch (HttpClientErrorException ignored) {
+        }
     }
 }

@@ -40,4 +40,8 @@ public class GunSubdivisionService {
 
         gunSubdivisionRepository.startSubdivisionPatrolling(subdivisionId, battleId);
     }
+
+    public void setGunsDeadStatus(Integer subdivisionId) {
+        gunSubdivisionRepository.setGunsDeadStatus(subdivisionId);
+    }
 }

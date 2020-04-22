@@ -1,6 +1,7 @@
 package battle.service.repository;
 
 
+import battle.service.dto.SetUnitStateDto;
 import battle.service.dto.UnitDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,13 +43,13 @@ public class EnemySubdivisionRepository {
         restTemplate.postForObject(url, HttpEntity.EMPTY, Void.class);
     }
 
-    public void setEnemyDeadStatus(Integer enemyId) {
-        String url = template + "/subdivisions/units/" + enemyId + "/dead";
+    public void setEnemyDeadStatus(SetUnitStateDto dto) {
+        String url = template + "/subdivisions/units/state/update";
+
+        HttpEntity<SetUnitStateDto> request = new HttpEntity<>(dto);
 
         try {
-            restTemplate.patchForObject(url, HttpEntity.EMPTY, Void.class);
-        } catch (HttpClientErrorException ignored) {
-            log.error("Unit with id '{}' to killing is not exist", enemyId);
-        }
+            restTemplate.patchForObject(url, request, Void.class);
+        } catch (HttpClientErrorException ignored) { }
     }
 }

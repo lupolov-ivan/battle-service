@@ -2,6 +2,8 @@ package battle.service.controller;
 
 import battle.service.dto.*;
 import battle.service.entity.Battle;
+import battle.service.entity.UnitState;
+import battle.service.entity.UnitType;
 import battle.service.exceptions.NotFoundException;
 import battle.service.service.BattleService;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +38,8 @@ public class BattleController {
     }
 
     @PostMapping("/{battleId}/stop")
-    public ResponseEntity<?> stopBattle(@PathVariable Integer battleId) {
-        battleService.stopBattle(battleId);
+    public ResponseEntity<?> stopBattle(@PathVariable Integer battleId, @RequestBody WinnerDto winner) {
+        battleService.stopBattle(battleId, winner);
         return ResponseEntity.ok().build();
     }
 

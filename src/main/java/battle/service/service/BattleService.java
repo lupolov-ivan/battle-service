@@ -56,13 +56,18 @@ public class BattleService {
         battleRepository.save(maybeBattle);
     }
 
-    public void stopBattle(Integer battleId) {
+    public void stopBattle(Integer battleId, WinnerDto winner) {
 
         Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
+
+        if (!winner.getWinner().equals(AFC)) {
+            gunSubdivisionService.setGunsDeadStatus(maybeBattle.getDefenderSubdivisionId());
+        }
 
         maybeBattle.setIsOver(true);
         maybeBattle.setEndAt(LocalDateTime.now(clock));
         battleRepository.save(maybeBattle);
+
     }
 
     public void setDamageUnit(Integer battleId, UnitDamageDto dto) {
@@ -82,7 +87,13 @@ public class BattleService {
 
             if (unit.getUnitType().equals(TANK) && unit.getProtectionLevel() <= unit.getTakenDamage()) {
                 unit.setUnitState(DEAD);
-                enemySubdivisionService.setEnemyIsDeadStatus(unit.getUnitId());
+
+                SetUnitStateDto unitStateDto = new SetUnitStateDto();
+                unitStateDto.setUnitId(unit.getUnitId());
+                unitStateDto.setUnitType(unit.getUnitType());
+                unitStateDto.setUnitState(unit.getUnitState());
+
+                enemySubdivisionService.setEnemyIsDeadStatus(unitStateDto);
             }
 
             if (unit.getUnitType().equals(UnitType.AFC) && unit.getProtectionLevel() <= unit.getTakenDamage()) {
@@ -91,7 +102,13 @@ public class BattleService {
 
             if (unit.getUnitType().equals(UnitType.INFANTRY) && (unit.getProtectionLevel() * 0.7) <= unit.getTakenDamage()) {
                 unit.setUnitState(DEAD);
-                enemySubdivisionService.setEnemyIsDeadStatus(unit.getUnitId());
+
+                SetUnitStateDto unitStateDto = new SetUnitStateDto();
+                unitStateDto.setUnitId(unit.getUnitId());
+                unitStateDto.setUnitType(unit.getUnitType());
+                unitStateDto.setUnitState(unit.getUnitState());
+
+                enemySubdivisionService.setEnemyIsDeadStatus(unitStateDto);
             }
 
             shot.setTargetId(unit.getId());

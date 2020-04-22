@@ -1,5 +1,6 @@
 package battle.service.service;
 
+import battle.service.dto.SetUnitStateDto;
 import battle.service.dto.UnitDto;
 import battle.service.entity.UnitData;
 import battle.service.repository.EnemySubdivisionRepository;
@@ -41,7 +42,7 @@ public class EnemySubdivisionService {
         enemySubdivisionRepository.startSubdivisionMoving(subdivisionId, battleId);
     }
 
-    public void setEnemyIsDeadStatus(Integer enemyId) {
-        enemySubdivisionRepository.setEnemyDeadStatus(enemyId);
+    public void setEnemyIsDeadStatus(SetUnitStateDto dto) {
+        enemySubdivisionRepository.setEnemyDeadStatus(dto);
     }
 }
