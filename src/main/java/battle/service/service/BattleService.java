@@ -62,6 +62,10 @@ public class BattleService {
 
         if (!winner.getWinner().equals(AFC)) {
             gunSubdivisionService.setGunsDeadStatus(maybeBattle.getDefenderSubdivisionId());
+            maybeBattle.getUnits().stream()
+                    .filter(u -> u.getUnitType().equals(AFC))
+                    .forEach(u -> u.setUnitState(DEAD));
+            log.info("Enemies reached CRITICAL DISTANCE. All guns is DEAD...");
         }
 
         maybeBattle.setIsOver(true);

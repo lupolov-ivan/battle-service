@@ -40,7 +40,7 @@ public class GunSubdivisionRepository {
     }
 
     public void setGunsDeadStatus(Integer subdivisionId) {
-        String url = template + "/subdivisions"+ subdivisionId +"/units/state/dead";
+        String url = template + "/subdivisions/"+ subdivisionId +"/units/state/dead";
 
         try {
             restTemplate.patchForObject(url, HttpEntity.EMPTY, Void.class);
