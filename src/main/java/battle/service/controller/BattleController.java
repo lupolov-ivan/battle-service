@@ -35,8 +35,14 @@ public class BattleController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{battleId}/stop")
+    public ResponseEntity<?> stopBattle(@PathVariable Integer battleId) {
+        battleService.stopBattle(battleId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{battleId}/units")
-    public ResponseEntity<Set<UnitDto>> getUnitsByOnBattlefield(@PathVariable Integer battleId) {
+    public ResponseEntity<Set<UnitDto>> getUnitsOnBattlefield(@PathVariable Integer battleId) {
         Set<UnitDto> units = battleService.getUnitsByBattleId( battleId);
 
         log.info("Get Units {}", units);
