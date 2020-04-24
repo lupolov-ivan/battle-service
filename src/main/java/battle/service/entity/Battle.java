@@ -15,6 +15,14 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 public class Battle {
 
+    public Battle(){}
+
+    public Battle(Integer id, Integer defenderSubdivisionId, Integer attackSubdivisionId) {
+        this.id = id;
+        this.defenderSubdivisionId = defenderSubdivisionId;
+        this.attackSubdivisionId = attackSubdivisionId;
+    }
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "battle_id")
