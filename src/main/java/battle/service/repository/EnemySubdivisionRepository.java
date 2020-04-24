@@ -1,7 +1,7 @@
 package battle.service.repository;
 
 
-import battle.service.dto.SetUnitStateDto;
+import battle.service.dto.UnitStateDto;
 import battle.service.dto.UnitDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,10 +43,10 @@ public class EnemySubdivisionRepository {
         restTemplate.postForObject(url, HttpEntity.EMPTY, Void.class);
     }
 
-    public void setEnemyDeadStatus(SetUnitStateDto dto) {
+    public void setEnemyDeadStatus(UnitStateDto dto) {
         String url = template + "/subdivisions/units/state/update";
 
-        HttpEntity<SetUnitStateDto> request = new HttpEntity<>(dto);
+        HttpEntity<UnitStateDto> request = new HttpEntity<>(dto);
 
         try {
             restTemplate.patchForObject(url, request, Void.class);

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -56,6 +57,14 @@ public class BattleService {
         battleRepository.save(maybeBattle);
     }
 
+    public Battle getBattleById(Integer battleId) {
+        return battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
+    }
+
+    public List<Battle> getAllBattles() {
+        return battleRepository.findAll();
+    }
+
     public void stopBattle(Integer battleId, WinnerDto winner) {
 
         Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
@@ -92,7 +101,7 @@ public class BattleService {
             if (unit.getUnitType().equals(TANK) && unit.getProtectionLevel() <= unit.getTakenDamage()) {
                 unit.setUnitState(DEAD);
 
-                SetUnitStateDto unitStateDto = new SetUnitStateDto();
+                UnitStateDto unitStateDto = new UnitStateDto();
                 unitStateDto.setUnitId(unit.getUnitId());
                 unitStateDto.setUnitType(unit.getUnitType());
                 unitStateDto.setUnitState(unit.getUnitState());
@@ -107,7 +116,7 @@ public class BattleService {
             if (unit.getUnitType().equals(UnitType.INFANTRY) && (unit.getProtectionLevel() * 0.7) <= unit.getTakenDamage()) {
                 unit.setUnitState(DEAD);
 
-                SetUnitStateDto unitStateDto = new SetUnitStateDto();
+                UnitStateDto unitStateDto = new UnitStateDto();
                 unitStateDto.setUnitId(unit.getUnitId());
                 unitStateDto.setUnitType(unit.getUnitType());
                 unitStateDto.setUnitState(unit.getUnitState());
@@ -143,7 +152,7 @@ public class BattleService {
         battleRepository.save(maybeBattle);
     }
 
-    public void updateUnitState(Integer battleId, SetUnitStateDto dto) {
+    public void updateUnitState(Integer battleId, UnitStateDto dto) {
         Battle maybeBattle = battleRepository.findById(battleId).orElseThrow(NotFoundException::new);
         Set<UnitData> units = maybeBattle.getUnits();
 

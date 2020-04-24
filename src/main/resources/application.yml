@@ -15,6 +15,10 @@ logging:
     root: info
 server:
   port: 8080
+uri-builder:
+  scheme: http
+  host: localhost
+  port: 8080
 battlefield:
   width: 20
   length: 50
