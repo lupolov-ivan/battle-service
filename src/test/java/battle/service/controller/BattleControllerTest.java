@@ -86,13 +86,12 @@ public class BattleControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
     }
 
-    @Ignore
     @Test
     public void given_When_Then() throws Exception {
-        UnitData unitData1 = new UnitData(null, 1, 2, 6, 5, UnitType.TANK, UnitState.ACTIVE, 0.0);
+        UnitData unitData = new UnitData(null, 1, 2, 6, 5, UnitType.TANK, UnitState.ACTIVE, 0.0);
 
         Battle battle = new Battle(null, 1, 1);
-        battle.getUnits().add(unitData1);
+        battle.getUnits().add(unitData);
 
         int battleId = battleRepository.save(battle).getId();
 
@@ -101,11 +100,7 @@ public class BattleControllerTest {
                 .content(TestUtils.fromResource("battlecontroller/position_update.json")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
-        Set<UnitData> units = battleRepository.getOne(battleId).getUnits();
-        List<UnitData> listUnits = new LinkedList<>();
-        listUnits.addAll(units);
-
-        UnitData unitData = listUnits.get(0);
-        assertTrue(unitData.getPosY() == 5);
+        UnitData unit = battleRepository.getOne(battleId).getUnits().iterator().next();
+        assertEquals(5, (int) unit.getPosY());
     }
 }
