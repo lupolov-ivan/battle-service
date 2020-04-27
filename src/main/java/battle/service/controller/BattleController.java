@@ -33,6 +33,7 @@ public class BattleController {
     @PostMapping
     public ResponseEntity<Battle> createBattle(@RequestBody BattleDto dto) {
         Battle battle = battleService.createBattle(dto);
+        battleService.startBattle(battle.getId());
         return ResponseEntity
                 .created(createUriBuilder("/battles/{id}").build(battle.getId()))
                 .build();
