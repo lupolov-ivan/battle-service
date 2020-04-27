@@ -46,7 +46,6 @@ public class BattleControllerTest {
         battleRepository.deleteAll();
     }
 
-    @Ignore
     @Test
     public void given_WhenCreateBattle_ThenFilledUnitData() throws Exception {
         stubFor(get("/subdivisions/1/guns")
