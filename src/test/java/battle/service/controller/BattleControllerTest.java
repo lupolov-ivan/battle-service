@@ -5,10 +5,7 @@ import battle.service.entity.UnitData;
 import battle.service.repository.BattleRepository;
 import battle.service.service.BattleService;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.junit.After;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -49,6 +46,7 @@ public class BattleControllerTest {
         battleRepository.deleteAll();
     }
 
+    @Ignore
     @Test
     public void given_WhenCreateBattle_ThenFilledUnitData() throws Exception {
         stubFor(get("/subdivisions/1/guns")
